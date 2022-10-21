@@ -1,14 +1,15 @@
 package Homework;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class DailyPlanner {
     //3.create an object DailyPlanner(agenda zilnica) that has a list of DaySchedule objects
     private List<DaySchedule> scheduleList = new ArrayList<>();
 
-    //4) add functionality to the DailyPlanner:
+//    public DailyPlanner(List<DaySchedule> scheduleList) {
+//        this.scheduleList = scheduleList;
+//    }
+//4) add functionality to the DailyPlanner:
     //
     //addActivity(day, activity),   - if the activity is null throw a custom UNCHECKED exception: NoActivityException
 
@@ -44,6 +45,34 @@ public class DailyPlanner {
         }
     }
 
+
+    public List<String> getActivitiesOfDay(DayOfTheWeek day){
+        // se verifica daca exista ziua in lista scheduleList
+        // List<String> result = new ArrayList<>();
+        for(DaySchedule daySchedule : scheduleList){
+            if(daySchedule.getDay()==day){
+                //result= daySchedule.getActivities();
+                return daySchedule.getActivities();
+            }
+        }
+        return null;
+    }
+
+
+
+    public Map<DayOfTheWeek,List<String>> endPlanning() throws NoActivitiesForDayException {
+        Map<DayOfTheWeek,List<String>> result = new HashMap<>();
+        DayOfTheWeek[] days = DayOfTheWeek.values();
+        for(DayOfTheWeek day : days){
+            DaySchedule daySchedule = getDaySchedule(day);
+            if(daySchedule == null || getActivitiesOfDay(day).size()==0){
+                throw new NoActivitiesForDayException();
+            }
+           result.put(day,daySchedule.getActivities());
+        }
+        return result;
+    }
+
     private boolean removeActivityFromDay(String activityToBeRemoved, DaySchedule daySchedule) {
         for(String activity : daySchedule.getActivities()){
             if(activity.equals(activityToBeRemoved)){
@@ -70,6 +99,8 @@ public class DailyPlanner {
         }
         return null;
     }
+
+
 
     @Override
     public String toString() {
